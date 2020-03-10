@@ -66,13 +66,18 @@ TEST = $(TEST_CMD) $(TEST_PKGS)
 DOCKER_BUILD ?= $(DOCKER) run --rm -v $(DIR):$(BUILDMNT) -w $(BUILDMNT) $(BUILD_IMAGE) /bin/sh -c
 
 # TODO (irfanurrehman): can add local compile, and auto-generate targets also if needed
-.PHONY: all container push clean hyperfed controller kubefedctl test local-test vet fmt build bindir generate webhook e2e
+.PHONY: all container push clean hyperfed controller kubefedctl test test-helm local-test vet fmt build bindir generate webhook e2e
 
 all: container hyperfed controller kubefedctl webhook e2e
 
 # Unit tests
 test: vet
 	go test $(TEST_PKGS)
+
+# Helm test.
+# WARNING: It needs a running cluster with Tiller initialized.
+test-helm:
+	helm-ct install
 
 build: hyperfed controller kubefedctl webhook
 
