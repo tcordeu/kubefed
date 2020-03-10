@@ -86,6 +86,10 @@ function run-namespaced-e2e-tests() {
   ${namespaced_e2e_test_cmd} --ginkgo.focus=Placement
 }
 
+function run-helm-test() {
+  ${MAKE_CMD} test-helm
+}
+
 function check-make-generate-output() {
   ${MAKE_CMD} generate
   echo "Checking state of working tree after running 'make generate'"
@@ -186,6 +190,9 @@ KUBEFED_NAMESPACE=foo NAMESPACED=y ./scripts/deploy-kubefed.sh ${CONTAINER_REGIS
 
 echo "Running go e2e tests with namespace-scoped kubefed"
 run-namespaced-e2e-tests
+
+echo "Running helm chart test"
+run-helm-test
 
 echo "Deleting namespace-scoped kubefed"
 KUBEFED_NAMESPACE=foo NAMESPACED=y DELETE_CLUSTER_RESOURCE=y ./scripts/delete-kubefed.sh
