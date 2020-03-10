@@ -57,6 +57,13 @@ curl "${curl_args}O" "${helm_url}" \
     && tar xzfp "${helm_tgz}" -C "${dest_dir}" --strip-components=1 "${platform}-amd64/helm" \
     && rm "${helm_tgz}"
 
+helm_ct_version="2.4.0"
+helm_ct_tgz="chart-testing_${helm_ct_version}_linux_amd64.tar.gz"
+helm_ct_url="https://github.com/helm/chart-testing/releases/download/v${helm_ct_version}/${helm_ct_tgz}"
+curl "${curl_args}O" "${helm_ct_url}" \
+  && tar xzfP "${helm_ct_tgz}" -C "${dest_dir}" --transform 's/ct/helm-ct/' ct \
+  && rm "${helm_ct_tgz}"
+
 # TODO(marun) Update to newer version of golangci-lint when
 # https://github.com/golangci/golangci-lint/issues/483 is fixed.
 golint_version="1.23.6"
@@ -80,5 +87,6 @@ echo    "# versions:"
 echo -n "#   kubectl:        "; "${dest_dir}/kubectl" version --client --short
 echo -n "#   kubebuilder:    "; "${dest_dir}/kubebuilder" version
 echo -n "#   helm:           "; "${dest_dir}/helm" version --client --short
+echo -n "#   helm-ct:        "; "${dest_dir}/helm-ct" version
 echo -n "#   golangci-lint:  "; "${dest_dir}/golangci-lint" --version
 echo -n "#   go-bindata:     "; "${dest_dir}/go-bindata" -version
